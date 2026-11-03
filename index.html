@@ -16,7 +16,7 @@
   --fest:#C62828; --local:#B85400; --local2:#D96A00; --vac:#00796B; --ens:#1565C0; --cen:#6A1B9A; --ext:#455A64;
   --e1:#1E6FD9; --e2:#1F9D55; --e3:#D6336C; --e4:#A67C00;
   --o1:#B5179E; --o2:#0077B6; --o3:#C77700; --o4:#2E7D32; --o5:#A0522D; --o6:#00897B; --o7:#5E35B1; --o8:#546E7A;
-  --c-ex:#F2C200; --c-in:#E8590C; --c-se:#0B0B0B; --c-co:#868E96; --c-tf:#7048E8; --c-ma:#00B8D9; --c-ac:#7CB518; --c-ad:#E64980;
+  --c-ex:#F2C200; --c-in:#E8590C; --c-se:#0B0B0B; --c-co:#868E96; --c-tf:#8A5A2B; --c-ma:#00B8D9; --c-ac:#748FFC; --c-ad:#E8590C;
   --display:"Bricolage Grotesque","Avenir Next","Segoe UI",system-ui,sans-serif;
   --body:"Atkinson Hyperlegible","Segoe UI",Roboto,system-ui,sans-serif;
 }
@@ -123,6 +123,7 @@ section.tab{display:none;padding-top:.7rem} section.tab.on{display:block}
 .tfet tbody th{font-weight:700;background:var(--card);min-width:11rem}
 .tfet th.ped{color:var(--fest)}
 .tfec{margin:.9rem 0 .2rem;font-size:1rem}
+.d.acx{background:var(--c-ac);color:var(--c-ac-t,#111B2E);font-weight:800;box-shadow:none}
 .d.exm{background:var(--c-ex);color:var(--c-ex-t,#111B2E);font-weight:800;box-shadow:none}
 .d.fora{opacity:.25}
 .d.evend{box-shadow:inset 0 0 0 3px var(--ink)}
@@ -596,7 +597,7 @@ function okConfirm(m){
 const Q=new URLSearchParams(location.search);
 const CFG=(window.CALENDARIO_CONFIG&&window.CALENDARIO_CONFIG.url&&window.CALENDARIO_CONFIG.key&&!/TU-PROYECTO/i.test(window.CALENDARIO_CONFIG.url))?window.CALENDARIO_CONFIG:null;
 /* Coa versión de servidor, a dirección simple é de SÓ LECTURA; a administración está en ?admin=1 */
-const MODE='ver'; /* copia de consulta: sempre só lectura */
+const MODE=Q.get('votar')?'voto':(Q.get('admin')?'admin':((Q.get('ver')||CFG)?'ver':'admin'));
 const RO=MODE!=='admin';
 
 const WD=['Luns','Martes','Mércores','Xoves','Venres'];
@@ -657,11 +658,20 @@ ACT.push(
  {id:'tfeO',g:'t',n:'TFE · defensas da convocatoria ordinaria',k:'ran',c:'tf',hint:'Consulta a táboa de prazos do TFE desta sección.'},
  {id:'tfeX',g:'t',n:'TFE · defensas da convocatoria extraordinaria',k:'ran',c:'tf',hint:'Consulta a táboa de prazos do TFE desta sección.'},
  {id:'matX',g:'m',n:'Período extraordinario de matrícula (tras o 1º cuadrimestre)',k:'ran',c:'ma',hint:'As datas fíxaas o centro (art. 10.5).'},
- {id:'acO',g:'m',n:'Probas de acceso ás ensinanzas superiores · ordinaria',k:'ran',c:'ac',min:'2027-06-01',max:'2027-07-31',minTxt:'en xuño e/ou xullo (art. 7.2)',hint:'As datas fíxaas a resolución anual de acceso e admisión (a de 2027/28, previsiblemente arredor de abril de 2027). A extraordinaria, de habela, é en setembro.'},
+  {id:'acI',g:'ac',proc:'acc',ord:1,n:'Acceso · fin do prazo de inscrición',k:'dia',c:'ac',hint:'O prazo de inscrición vai desde o día seguinte á publicación no DOG ata o 21 de maio.'},
+ {id:'acL',g:'ac',proc:'acc',ord:2,n:'Acceso · publicación da listaxe provisional de admitidos e excluídos',k:'dia',c:'ac'},
+ {id:'acR',g:'ac',proc:'acc',ord:3,n:'Acceso · reclamación contra a listaxe provisional',k:'ran',c:'ac'},
+ {id:'acD',g:'ac',proc:'acc',ord:4,n:'Acceso · publicación da listaxe definitiva de admitidos e excluídos',k:'dia',c:'ac'},
+ {id:'acP',g:'ac',proc:'acc',ord:5,n:'Acceso · proba específica',k:'ran',c:'ac'},
+ {id:'acC',g:'ac',proc:'acc',ord:6,n:'Acceso · listaxe provisional de cualificacións da proba específica',k:'dia',c:'ac'},
+ {id:'acR2',g:'ac',proc:'acc',ord:7,n:'Acceso · reclamación contra as cualificacións da proba específica',k:'ran',c:'ac'},
+ {id:'acF',g:'ac',proc:'acc',ord:8,n:'Acceso · listaxe definitiva de cualificacións da proba específica',k:'dia',c:'ac'},
+ {id:'acA',g:'ac',proc:'acc',ord:9,n:'Acceso · publicación da listaxe de adxudicación de prazas',k:'dia',c:'ac'},
+ {id:'acM',g:'ac',proc:'acc',ord:10,n:'Acceso · formalización de matrícula para o curso 2027/28',k:'ran',c:'ac'},
  {id:'matJ',g:'m',n:'Matrícula de xullo',k:'ran',c:'ma',min:'2027-07-01',max:'2027-07-31',minTxt:'en xullo'}
 );
-const GRP={ad:'Exames de adianto de convocatoria · disciplinas pendentes',o1:'Convocatoria ordinaria · 1º cuadrimestre',o2:'Convocatoria ordinaria · 2º cuadrimestre',ex:'Convocatoria extraordinaria',t:'Traballo fin de estudos (TFE)',m:'Matrícula e probas de acceso'};
-const GORD=['o1','o2','ex','ad','t','m'];
+const GRP={ad:'Exames de adianto de convocatoria · disciplinas pendentes',o1:'Convocatoria ordinaria · 1º cuadrimestre',o2:'Convocatoria ordinaria · 2º cuadrimestre',ex:'Convocatoria extraordinaria',t:'Traballo fin de estudos (TFE)',m:'Matrícula',ac:'Probas de acceso ás ensinanzas artísticas superiores de Música (curso 2027/28)'};
+const GORD=['o1','o2','ex','ad','t','m','ac'];
 /* TFE: prazos oficiais por perfil, convocatoria e especialidade (táboa do centro, curso 2026-27) */
 const Y='2027-';
 const R=(a,b)=>[Y+a,Y+(b||a)];
@@ -759,7 +769,7 @@ function adCalEvents(){
       nota:'Exames de adianto de convocatoria · disciplinas pendentes (fase '+a.ord+' de '+ph.length+').'+(any?'':' Datas de exemplo, provisionais.')});
   }).filter(Boolean);
 }
-function adCal(){return {id:'adianto',n:'Adianto de convocatoria',c:'#E64980',pub:false,ev:adCalEvents()}}
+function adCal(){return {id:'adianto',n:'Adianto de convocatoria',c:'#E8590C',pub:false,ev:adCalEvents()}}
 function concPlanEvs(){
   const L='Planetario da UDC · ETS de Náutica e Máquinas';
   return ['2027-04-28','2027-05-05','2027-05-12'].map((d,i)=>mkEv({id:'concplan'+(i+1),t:'Concerto · Planetario da UDC',d1:d,h1:'20:00',esp:L,ent:'Universidade da Coruña (UDC)',nota:'En colaboración coa UDC. ETS de Náutica e Máquinas.'}));
@@ -768,11 +778,31 @@ function concOctEv(){return mkEv({id:'concoct1',t:'Concerto · Anxo Gómez (viol
 function frJazzEvs(){return [
   mkEv({id:'jazzstowell',t:'Curso de jazz con John Stowell',d1:'2026-11-11',h1:'09:00',h2:'14:00',esp:'Auditorio Andrés Gaos'}),
   mkEv({id:'fratelli',t:'Fratelli Patricola · Tour 50 aniversario · Exposición de clarinete e oboe',d1:'2026-11-23',h1:'10:30',h2:'13:30',esp:'Aula de cámara'})]}
+function propinasEvs(){
+  const N='Ciclo Propinas: concertos autoxestionados polo alumnado, sen programa. Cada solista ou grupo de cámara presenta a súa obra ao rematar de tocala. Pensado para que o alumnado se achegue progresivamente ao auditorio do centro.';
+  return ['2026-11-03','2026-11-10','2026-11-17','2026-11-24','2026-12-01','2026-12-15','2027-01-12']
+   .map((d,i)=>mkEv({id:'propinas'+(i+1),t:'Ciclo Propinas',d1:d,h1:'20:00',esp:'Auditorio Andrés Gaos',nota:N}));
+}
+function tfeDir2Ev(){return mkEv({id:'tfedir2',t:'Concerto TFE de Dirección · Félix Iago Rodríguez Ramos · Banda Sinfónica',d1:'2026-12-16',esp:'Auditorio Andrés Gaos',nota:'TFE de Dirección de Félix Iago Rodríguez Ramos coa Banda Sinfónica do conservatorio. Horario por determinar.'})}
+function cifpEvs(){return [
+  mkEv({id:'cifp1',t:'Concurso Estrella Galicia · Combo de jazz do CSM da Coruña',d1:'2027-05-05',ent:'CIFP Paseo das Pontes',nota:'En colaboración co CIFP Paseo das Pontes. Participa o combo de jazz do conservatorio.'}),
+  mkEv({id:'cifp2',t:'Desfile de moda · Big Band do CSM da Coruña',d1:'2027-05-20',h1:'18:00',ent:'CIFP Paseo das Pontes',nota:'En colaboración co CIFP Paseo das Pontes. Actúa a Big Band do conservatorio.'})]}
+function erasmusDocEv(){return mkEv({id:'erasmusdoc',t:'Bolsas Erasmus STT e STA (profesorado) · fin do prazo de entrega da documentación',d1:'2026-11-05',h1:'13:00',esp:'Oficina do Conservatorio Superior de Música da Coruña',nota:'A documentación entrégase por Rexistro de entrada na Oficina do Conservatorio Superior de Música da Coruña. O prazo remata ás 13:00 do 5 de novembro de 2026. Tamén se pode enviar ao correo direccion@csmcoruna.com dentro do mesmo prazo.'})}
+function accCalEvents(){
+  const ph=ACT.filter(a=>a.proc==='acc').sort((x,y)=>x.ord-y.ord);
+  return ph.map(a=>{
+    const r=actRange(a.id);if(!r)return null;
+    return mkEv({id:'acccal'+a.ord,t:a.n,d1:r[0],d2:r[1]>r[0]?r[1]:'',
+      nota:'Probas de acceso ás ensinanzas artísticas superiores de Música (curso 2027/28), fase '+a.ord+' de '+ph.length+'.'+(a.id==='acI'?' O prazo de inscrición vai desde o día seguinte á publicación no DOG ata o 21 de maio.':'')});
+  }).filter(Boolean);
+}
+function accCal(){return {id:'acceso',n:'Probas de acceso',c:'#748FFC',pub:true,ev:accCalEvents()}}
+function accBar(){return '<div class="row noprint" style="margin-bottom:.4rem"><button class="btn sm" id="accCalOpen">Abrir o calendario das probas de acceso</button>'+(RO?'':'<button class="btn sm" id="accCalGen">Actualizar o calendario coas fases</button>')+'</div>'}
 function concCal(){
   const L='Sporting Club Casino da Coruña',D=[['2026-11-12','Jazz'],['2026-11-19','Piano e guitarra'],['2026-11-26','Vento madeira'],['2026-12-03','Vento metal'],['2026-12-10','Canto e acordeón'],['2026-12-17','Corda'],['2027-01-28','Cámara'],['2027-02-04','Cámara'],['2027-04-08','Jazz'],['2027-04-15','Piano e guitarra'],['2027-04-22','Vento madeira'],['2027-04-29','Vento metal'],['2027-05-06','Canto e acordeón'],['2027-05-13','Corda'],['2027-05-20','Cámara'],['2027-05-27','Cámara'],['2027-06-10','TFE'],['2027-06-17','TFE']];
-  return {id:'concertos',n:'Actividades artísticas',c:'#1C7ED6',pub:false,ev:D.map((x,i)=>mkEv({id:'conc'+(i+1),t:'Concerto · '+x[1],d1:x[0],h1:'20:00',esp:L})).concat(concBAEvs(),concUDCEvs(),[concBenEv(),masterEv()],concNovEvs(),[xornEv()],concJunEvs(),concPlanEvs(),[concOctEv(),congEv(),congConcEv()],frJazzEvs())};
+  return {id:'concertos',n:'Actividades artísticas',c:'#1C7ED6',pub:false,ev:D.map((x,i)=>mkEv({id:'conc'+(i+1),t:'Concerto · '+x[1],d1:x[0],h1:'20:00',esp:L})).concat(concBAEvs(),concUDCEvs(),[concBenEv(),masterEv()],concNovEvs(),[xornEv()],concJunEvs(),concPlanEvs(),[concOctEv(),congEv(),congConcEv()],frJazzEvs(),propinasEvs(),[tfeDir2Ev()],cifpEvs())};
 }
-function tfeCal(){return {id:'tfe',n:'TFE',c:'#2B8A3E',pub:false,ev:tfeEvents()}}
+function tfeCal(){return {id:'tfe',n:'TFE',c:'#8A5A2B',pub:false,ev:tfeEvents()}}
 function tfeTab(){
   const sel=S.tfeSel||'';
   const cell=a=>(a||[]).map(c=>'<div>'+esc(c.t)+'</div>'+((c.calc||c.open)?'<div class="small muted">Sen data fixa: non figura no calendario'+(c.calc?' · usa a calculadora':'')+'</div>':'')).join('');
@@ -955,6 +985,50 @@ function normState(){
     if(cc)frJazzEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
     S.frJazz=true;
   }
+  if(!S.propinas){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)propinasEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
+    S.propinas=true;
+  }
+  if(!S.tfeDir2){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc&&!cc.ev.some(e=>e.id==='tfedir2'))cc.ev.push(tfeDir2Ev());
+    S.tfeDir2=true;
+  }
+  if(!S.cifp){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cifpEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
+    S.cifp=true;
+  }
+  if(!S.erasmusDoc){
+    const ce=S.cals.find(c=>c.id==='erasmus');
+    if(ce){ce.pub=true;if(!ce.ev.some(e=>e.id==='erasmusdoc'))ce.ev.push(erasmusDocEv())}
+    S.erasmusDoc=true;
+  }
+  if(!S.accSeed){
+    delete S.acts.acO;
+    const D={acI:['2027-05-21'],acL:['2027-05-28'],acR:['2027-05-31','2027-06-01'],acD:['2027-06-03'],acP:['2027-06-07','2027-06-11'],acC:['2027-06-14'],acR2:['2027-06-15','2027-06-16'],acF:['2027-06-22'],acA:['2027-07-05'],acM:['2027-07-06','2027-07-09']};
+    Object.keys(D).forEach(k=>{if(!S.acts[k]||!S.acts[k].a)S.acts[k]=D[k][1]?{a:D[k][0],b:D[k][1]}:{a:D[k][0]}});
+    S.accSeed=true;
+  }
+  if(!S.accCal){
+    if(!S.cals.some(c=>c.id==='acceso')){
+      let i=S.cals.findIndex(c=>c.id==='adianto');if(i<0)i=S.cals.findIndex(c=>c.id==='concertos');if(i<0)i=S.cals.findIndex(c=>c.id==='tfe');
+      S.cals.splice(i<0?0:i+1,0,accCal());
+    }
+    const ac=S.cals.find(c=>c.id==='acceso');if(ac)ac.pub=true;
+    S.accCal=true;
+  }
+  if(!S.colFix){
+    const NC={adianto:['#E64980','#E8590C'],acceso:['#7CB518','#748FFC'],tfe:['#2B8A3E','#8A5A2B']};
+    S.cals.forEach(c=>{const m=NC[c.id];if(m&&String(c.c).toUpperCase()===m[0])c.c=m[1]});
+    S.colFix=true;
+  }
+  if(!S.delReu){
+    S.cals=S.cals.filter(c=>c.id!=='reunions');
+    if(S.cur==='reunions')S.cur='school';
+    S.delReu=true;
+  }
   if(!S.concHora){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cc.ev.forEach(e=>{if(/^conc\d+$/.test(e.id)&&!e.h1)e.h1='20:00'});
@@ -990,7 +1064,6 @@ function normState(){
   sortProps();
 }
 normState();
-S.cals.forEach(c=>{c.pub=true});
 let synced=false,pushT=null;
 function save(){if(RO)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(CFG&&synced){clearTimeout(pushT);pushT=setTimeout(pushDraft,1200)}try{updatePubBtn()}catch(e){}}
 
@@ -1110,7 +1183,7 @@ function renderLegend(){
    '<span><i class="sw vac"></i>Vacacións</span><span><i class="sw ens"></i>Día do Ensino</span><span><i class="sw cen"></i>Día do centro</span>'+
    '<span><i class="sw ext"></i>Outro non lectivo</span><span><i class="sw act"></i>Sen clase, con actividade</span><span><i class="sw we"></i>Fin de semana</span><span><i class="sw" style="background:none;border:0;display:inline-flex;align-items:center;justify-content:center"><span style="display:block;width:.8rem;height:.8rem;border-radius:50%;background:currentColor"></span></i>Prazo destacado (TFE e fitos da normativa)</span>'+
    '<span><i class="sw ev" style="background:var(--e1)"></i>1º<i class="sw ev" style="background:var(--e2)"></i>2º cuadrimestre<i class="sw ev" style="background:var(--e3)"></i>Lectivo despois do 2º · franxa de abaixo</span>'+
-   '<span><i class="sw" style="background:var(--c-ex)"></i>Exames (teóricos e de instrumento)</span>'+band('se','Último día de carga de notas')+band('tf','TFE')+band('ma','Matrícula')+band('ac','Probas de acceso')+band('ad','Adianto de convocatoria')+
+   '<span><i class="sw" style="background:var(--c-ex)"></i>Exames (teóricos e de instrumento)</span>'+band('se','Último día de carga de notas')+band('tf','TFE')+band('ma','Matrícula')+'<span><i class="sw" style="background:var(--c-ac)"></i>Probas de acceso (días de proba; fases do procedemento en franxa)</span>'+band('ad','Adianto de convocatoria')+
    '<span><b style="display:inline-flex;width:1.15rem;height:1.15rem;border-radius:50%;background:var(--o1);color:#fff;font-size:.72rem;align-items:center;justify-content:center">A</b>Proposta</span>';
 }
 function renderSum(){
@@ -1130,12 +1203,12 @@ function cellHTML(s,inRange,today,inLine){
   const I=info(s),ev=I.t==='lect'?evalOf(s):0;
   const isEnd=(s===S.c1||(s===S.c2&&S.c2!==END)),Z=S.hitos?pzOn(s):[],hit=S.hitos&&(HITOS[s]||Z.length);
   const P=activeProps(),pi=P.indexOf(s),A=actsOn(s);
-  const isEx=a=>a.conv&&/[ti]$/.test(a.id),exm=(I.t==='lect'||I.t==='act')&&A.some(isEx);
+  const isEx=a=>a.conv&&/[ti]$/.test(a.id),exm=(I.t==='lect'||I.t==='act')&&A.some(isEx),acx=(I.t==='lect'||I.t==='act')&&A.some(a=>a.id==='acP');
   const title=fmtL(s)+'. '+I.n+(A.length?'. '+A.map(a=>a.n).join('; '):'')+(S.hitos&&HITOS[s]?'. '+HITOS[s]:'')+(Z.length?'. '+Z.map(p=>p.n).join('; '):'')+(isEnd?'. Fin de cuadrimestre':'')+(pi>=0?'. Proposta '+LET[pi]:'');
   const d=parse(s).getDate();
-  return '<button class="d '+I.t+(exm?' exm':'')+(inRange?'':' fora')+(isEnd?' evend':'')+(s===today?' today':'')+(pi>=0?' pp':'')+'" data-s="'+s+'" aria-label="'+esc(title)+'" title="'+esc(title)+'"'+(pi>=0?' style="--o:'+OCOL[pi]+'"':'')+'>'+
+  return '<button class="d '+I.t+(exm?' exm':'')+(acx?' acx':'')+(inRange?'':' fora')+(isEnd?' evend':'')+(s===today?' today':'')+(pi>=0?' pp':'')+'" data-s="'+s+'" aria-label="'+esc(title)+'" title="'+esc(title)+'"'+(pi>=0?' style="--o:'+OCOL[pi]+'"':'')+'>'+
     (inLine?'<span>'+d+'</span><small>'+WDI[(dow(s)+6)%7]+'</small>':d)+
-    A.filter(a=>!(exm&&isEx(a))).slice(0,2).map((a,i)=>'<span class="acb'+(i?' b2':'')+'" style="--ac:'+acCol(a)+'"></span>').join('')+
+    A.filter(a=>!(exm&&isEx(a))&&!(acx&&a.id==='acP')).slice(0,2).map((a,i)=>'<span class="acb'+(i?' b2':'')+'" style="--ac:'+acCol(a)+'"></span>').join('')+
     (ev?'<span class="ev" style="background:var(--e'+ev+')"></span>':'')+(hit?'<span class="hit"></span>':'')+
     (pi>=0?'<span class="pr" style="--o:'+OCOL[pi]+'">'+LET[pi]+'</span>':'')+'</button>';
 }
@@ -1446,7 +1519,7 @@ function renderExa(){
   else h+='<div class="panel"><h2>Exames e convocatorias</h2><p class="small muted">Datas do curso 2026-27. Información orientativa: valen as que publique o centro.</p></div>';
   GRPS().forEach(([g,gn])=>{
     const its=ALL().filter(a=>a.g===g);
-    h+='<div class="panel"><h3 style="margin-top:0">'+esc(gn)+'</h3>'+(g==='ad'?adProc():'')+(g==='t'?tfeTab():'')+(its.length?its.map(rowHTML).join(''):'<p class="small muted">Este bloque aínda non ten elementos. Engádeos en Axustes.</p>');
+    h+='<div class="panel"><h3 style="margin-top:0">'+esc(gn)+'</h3>'+(g==='ad'?adProc():'')+(g==='t'?tfeTab():'')+(g==='ac'?accBar():'')+(its.length?its.map(rowHTML).join(''):'<p class="small muted">Este bloque aínda non ten elementos. Engádeos en Axustes.</p>');
     h+='</div>';
   });
   const L=ALL().filter(a=>actRange(a.id)).map(a=>{const r=actRange(a.id);return {a:r[0],b:r[1],h:'<li><span class="dot" style="background:'+acCol(a)+'"></span><b>'+(r[0]===r[1]?fmt(r[0]):fmt(r[0])+' – '+fmt(r[1]))+'</b> · '+esc(a.n)+'</li>'}}).concat(PZ.map(p=>({a:p.a,b:p.b,h:pzLi(p)}))).sort((x,y)=>x.a<y.a?-1:x.a>y.a?1:0);
@@ -1698,6 +1771,13 @@ $('t-exa').addEventListener('click',e=>{
     if(c)c.ev=tfeEvents();else S.cals.unshift(tfeCal());
     commit();toast('Calendario TFE actualizado.');return;
   }
+  if(b.id==='accCalOpen'){if(!S.cals.some(c=>c.id==='acceso'&&(!RO||c.pub))){toast('O calendario das probas de acceso aínda non está publicado.');return}reqCal='';S.cur='acceso';save();renderAll();window.scrollTo&&window.scrollTo(0,0);return}
+  if(b.id==='accCalGen'){
+    const c=S.cals.find(x=>x.id==='acceso');
+    if(c&&c.ev.length&&!okConfirm('Isto substitúe os eventos do calendario das probas de acceso polas fases do procedemento (perdes os cambios que fixeses neles). Continuar?'))return;
+    if(c)c.ev=accCalEvents();else S.cals.splice(Math.max(0,S.cals.findIndex(x=>x.id==='adianto')+1),0,accCal());
+    commit();toast('Calendario das probas de acceso actualizado.');return;
+  }
   if(b.id==='adCalOpen'){if(!S.cals.some(c=>c.id==='adianto'&&(!RO||c.pub))){toast('O calendario do adianto aínda non está publicado.');return}reqCal='';S.cur='adianto';save();renderAll();window.scrollTo&&window.scrollTo(0,0);return}
   if(b.id==='adCalGen'){
     const c=S.cals.find(x=>x.id==='adianto');
@@ -1720,7 +1800,7 @@ const COLORS=[
  ['Exames e convocatorias (franxa de arriba)',[['c-ex','Exames (teóricos e de instrumento)'],['c-se','Último día para cargar as notas'],['c-tf','TFE'],['c-ma','Matrícula'],['c-ac','Probas de acceso'],['c-ad','Adianto de convocatoria (todas as fases)']]],
  ['Propostas',LET.map((l,i)=>['o'+(i+1),'Proposta '+l])]
 ];
-const SOLID=['lect','fest','local','vac','ens','cen','ext','c-ex'];
+const SOLID=['lect','fest','local','vac','ens','cen','ext','c-ex','c-ac'];
 const HEX=/^#[0-9a-f]{6}$/i;
 function textOn(hex){const n=parseInt(hex.slice(1),16),r=n>>16,g=(n>>8)&255,b=n&255;return (0.2126*r+0.7152*g+0.0722*b)>140?'#111B2E':'#FFFFFF'}
 function lighten(hex,p){const n=parseInt(hex.slice(1),16),f=x=>Math.round(x+(255-x)*p).toString(16).padStart(2,'0');return '#'+f(n>>16)+f((n>>8)&255)+f(n&255)}
@@ -2488,7 +2568,6 @@ $('adminGo').onclick=async()=>{
 
 /* ================= Arranque ================= */
 if(RO)document.body.classList.add('ro');
-document.body.insertAdjacentHTML('afterbegin','<div class="noprint" style="background:#FFF3BF;color:#3B2F00;border-bottom:2px solid #F59F00;padding:.45rem .8rem;font:600 .9rem system-ui,sans-serif;text-align:center">O día non lectivo elixido polo Consello Escolar está pendente de aprobación por parte da Inspección.</div>');
 if(MODE==='voto'){initVoter()}
 else{
   if(RO){$('hdrP').textContent='Datas do curso 2026-27: días lectivos, festivos, cuadrimestres, exames, convocatorias e prazos.'}

@@ -753,6 +753,11 @@ function masterEv(){return mkEv({id:'masterMM',t:'Masterclass de Mariano Martos 
 function concNovEvs(){return [
   mkEv({id:'concsol',t:'Concerto dos gañadores do concurso de solistas con orquestra e banda sinfónica',d1:'2026-11-25',h1:'20:00',esp:'Palacio da Ópera da Coruña',nota:'Concerto dos gañadores do concurso de solistas coa Orquestra e a Banda Sinfónica do Conservatorio Superior de Música da Coruña.'}),
   mkEv({id:'concdir',t:'Concerto TFE de Dirección',d1:'2026-11-16',esp:'Auditorio Andrés Gaos'})]}
+function cfrEvs(){
+  const E='CFR da Coruña',L='Auditorio do CSM da Coruña';
+  return [['cfr1','2026-11-05','Alana Portero'],['cfr2','2026-11-19','Elena Medel'],['cfr3','2026-12-10','Rosa Montero']]
+   .map(x=>mkEv({id:x[0],t:'Encontro coa escritora '+x[2]+' · CFR da Coruña',d1:x[1],h1:'19:00',esp:L,ent:E,nota:'Actividade do CFR da Coruña no noso auditorio.'}));
+}
 function xornEv(){return mkEv({id:'xorndem',t:'Xornadas «Democratización do Coñecemento»',d1:'2026-12-02',h1:'12:00',esp:'Paraninfo da Reitoría'})}
 function concJunEvs(){
   const L='Teatro Colón',B='Sinerxias V · Big Band do CSM da Coruña';
@@ -1002,6 +1007,16 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cifpEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
     S.cifp=true;
+  }
+  if(!S.cfrEsc){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cfrEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
+    S.cfrEsc=true;
+  }
+  if(!S.cfrHora){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cfrEvs().forEach(n=>{const e=cc.ev.find(x=>x.id===n.id);if(e){e.h1='19:00';e.nota=n.nota}});
+    S.cfrHora=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

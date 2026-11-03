@@ -22,17 +22,20 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#0E1524; --card:#1A2438; --ink:#F0F4FA; --muted:#A3AFC4; --line:#33415C; --we:#0A101C;
+    --paper:#000000; --card:#0F1013; --ink:#F2F2F0; --muted:#9A9DA6; --line:#2A2C33; --we:#07080A; --c-se:#F2F2F0;
     --fest:#D32F2F; --local:#C25E00; --local2:#E07A10; --vac:#00897B; --ens:#1E88E5; --cen:#8E24AA; --ext:#607D8B;
     --e1:#5AA2FF; --e2:#4FD18B; --e3:#FF7BAA; --e4:#E5C15D;
     --o1:#E060D0; --o2:#4FB3F0; --o3:#F0A830; --o4:#5FD068; --o5:#D98A62; --o6:#4DD0BF; --o7:#A58BFF; --o8:#90A4AE;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#0E1524; --card:#1A2438; --ink:#F0F4FA; --muted:#A3AFC4; --line:#33415C; --we:#0A101C;
+  --paper:#000000; --card:#0F1013; --ink:#F2F2F0; --muted:#9A9DA6; --line:#2A2C33; --we:#07080A; --c-se:#F2F2F0;
   --fest:#D32F2F; --local:#C25E00; --local2:#E07A10; --vac:#00897B; --ens:#1E88E5; --cen:#8E24AA; --ext:#607D8B;
   --e1:#5AA2FF; --e2:#4FD18B; --e3:#FF7BAA; --e4:#E5C15D;
   --o1:#E060D0; --o2:#4FB3F0; --o3:#F0A830; --o4:#5FD068; --o5:#D98A62; --o6:#4DD0BF; --o7:#A58BFF; --o8:#90A4AE;
+}
+@media print{
+  :root[data-theme="dark"]{--paper:#EEF1F5;--card:#FFFFFF;--ink:#111B2E;--muted:#56637A;--line:#CBD3DF;--we:#DCE1E9;--c-se:#0B0B0B;--fest:#C62828;--local:#B85400;--local2:#D96A00;--vac:#00796B;--ens:#1565C0;--cen:#6A1B9A;--ext:#455A64;--e1:#1E6FD9;--e2:#1F9D55;--e3:#D6336C;--e4:#A67C00;--o1:#B5179E;--o2:#0077B6;--o3:#C77700;--o4:#2E7D32;--o5:#A0522D;--o6:#00897B;--o7:#5E35B1;--o8:#546E7A}
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:16px;-webkit-text-size-adjust:100%}
@@ -1064,7 +1067,7 @@ function normState(){
   sortProps();
 }
 normState();
-S.cals.forEach(c=>{c.pub=true});
+S.cals.forEach(c=>{c.pub=true});S.theme='dark';
 let synced=false,pushT=null;
 function save(){if(RO)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(CFG&&synced){clearTimeout(pushT);pushT=setTimeout(pushDraft,1200)}try{updatePubBtn()}catch(e){}}
 

@@ -597,7 +597,7 @@ function okConfirm(m){
 const Q=new URLSearchParams(location.search);
 const CFG=(window.CALENDARIO_CONFIG&&window.CALENDARIO_CONFIG.url&&window.CALENDARIO_CONFIG.key&&!/TU-PROYECTO/i.test(window.CALENDARIO_CONFIG.url))?window.CALENDARIO_CONFIG:null;
 /* Coa versión de servidor, a dirección simple é de SÓ LECTURA; a administración está en ?admin=1 */
-const MODE=Q.get('votar')?'voto':(Q.get('admin')?'admin':((Q.get('ver')||CFG)?'ver':'admin'));
+const MODE='ver'; /* copia de consulta: sempre só lectura */
 const RO=MODE!=='admin';
 
 const WD=['Luns','Martes','Mércores','Xoves','Venres'];
@@ -1064,6 +1064,7 @@ function normState(){
   sortProps();
 }
 normState();
+S.cals.forEach(c=>{c.pub=true});
 let synced=false,pushT=null;
 function save(){if(RO)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(CFG&&synced){clearTimeout(pushT);pushT=setTimeout(pushDraft,1200)}try{updatePubBtn()}catch(e){}}
 
@@ -1980,7 +1981,7 @@ function renderSwitch(){
   if(vc.length)items.push({id:'all',n:'Todos os calendarios',c:'#111B2E'});
   if(!RO)items.push({id:'mgr',n:'+ Calendarios',c:'#56637A'});
   const cid=curId();
-  sw.innerHTML=items.map(i=>'<button class="calpill'+(cid===i.id?' on':'')+'" data-cal="'+esc(i.id)+'" style="--c:'+i.c+';--t:'+(i.c.charAt(0)==='#'?textOn(i.c):'#fff')+'">'+esc(i.n)+(i.hid?' <small>(oculto)</small>':'')+'</button>').join('');
+  sw.innerHTML=items.map(i=>'<button class="calpill'+(cid===i.id?' on':'')+'" data-cal="'+esc(i.id)+'" style="--c:'+i.c+';--t:'+(i.c.charAt(0)==='#'?textOn(i.c):'#fff')+'">'+esc(i.n)+'</button>').join('');
 }
 function renderEvents(){
   renderSwitch();
@@ -2568,6 +2569,7 @@ $('adminGo').onclick=async()=>{
 
 /* ================= Arranque ================= */
 if(RO)document.body.classList.add('ro');
+document.body.insertAdjacentHTML('afterbegin','<div class="noprint" style="background:#FFF3BF;color:#3B2F00;border-bottom:2px solid #F59F00;padding:.45rem .8rem;font:600 .9rem system-ui,sans-serif;text-align:center">O día non lectivo elixido polo Consello Escolar está pendente de aprobación por parte da Inspección.</div>');
 if(MODE==='voto'){initVoter()}
 else{
   if(RO){$('hdrP').textContent='Datas do curso 2026-27: días lectivos, festivos, cuadrimestres, exames, convocatorias e prazos.'}

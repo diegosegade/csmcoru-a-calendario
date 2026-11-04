@@ -758,6 +758,15 @@ function cfrEvs(){
   return [['cfr1','2026-11-05','Alana Portero'],['cfr2','2026-11-19','Elena Medel'],['cfr3','2026-12-10','Rosa Montero']]
    .map(x=>mkEv({id:x[0],t:'Encontro coa escritora '+x[2]+' · CFR da Coruña',d1:x[1],h1:'19:00',esp:L,ent:E,nota:'Actividade do CFR da Coruña no noso auditorio.'}));
 }
+function novEvs(){
+  const FLS='Fundación Luís Seoane',AF='Afundación (Obra Social ABANCA)';
+  return [
+   mkEv({id:'fls1',t:'Concerto · Fundación Luís Seoane',d1:'2027-04-20',h1:'19:00',esp:FLS,ent:'Fundación Luís Seoane'}),
+   mkEv({id:'fls2',t:'Concerto · Fundación Luís Seoane',d1:'2027-04-27',h1:'19:00',esp:FLS,ent:'Fundación Luís Seoane'}),
+   mkEv({id:'afund1',t:'Concerto · Cultura por alimentos',d1:'2027-02-22',h1:'19:30',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
+   mkEv({id:'afund2',t:'Concerto · Cultura por alimentos',d1:'2027-02-23',h1:'19:30',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
+   mkEv({id:'chuf50',t:'50 Aniversario do CHUF · colaboración do conservatorio',d1:'2026-12-03',h1:'17:00',esp:'Salón de Actos do Hospital Arquitecto Marcide (Ferrol)',ent:'CHUF · Complexo Hospitalario Universitario de Ferrol'})];
+}
 function xornEv(){return mkEv({id:'xorndem',t:'Xornadas «Democratización do Coñecemento»',d1:'2026-12-02',h1:'12:00',esp:'Paraninfo da Reitoría'})}
 function concJunEvs(){
   const L='Teatro Colón',B='Sinerxias V · Big Band do CSM da Coruña';
@@ -1017,6 +1026,16 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cfrEvs().forEach(n=>{const e=cc.ev.find(x=>x.id===n.id);if(e){e.h1='19:00';e.nota=n.nota}});
     S.cfrHora=true;
+  }
+  if(!S.novAgenda){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)novEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
+    S.novAgenda=true;
+  }
+  if(!S.novHora){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='fls1'||e.id==='fls2')e.h1='19:00';if(e.id==='afund1'||e.id==='afund2')e.h1='19:30'});
+    S.novHora=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

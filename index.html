@@ -817,7 +817,7 @@ function accCal(){return {id:'acceso',n:'Probas de acceso',c:'#748FFC',pub:true,
 function accBar(){return '<div class="row noprint" style="margin-bottom:.4rem"><button class="btn sm" id="accCalOpen">Abrir o calendario das probas de acceso</button>'+(RO?'':'<button class="btn sm" id="accCalGen">Actualizar o calendario coas fases</button>')+'</div>'}
 function concCal(){
   const L='Sporting Club Casino da Coruña',D=[['2026-11-12','Jazz'],['2026-11-19','Piano e guitarra'],['2026-11-26','Vento madeira'],['2026-12-03','Vento metal'],['2026-12-10','Canto e acordeón'],['2026-12-17','Corda'],['2027-01-28','Cámara'],['2027-02-04','Cámara'],['2027-04-08','Jazz'],['2027-04-15','Piano e guitarra'],['2027-04-22','Vento madeira'],['2027-04-29','Vento metal'],['2027-05-06','Canto e acordeón'],['2027-05-13','Corda'],['2027-05-20','Cámara'],['2027-05-27','Cámara'],['2027-06-10','TFE'],['2027-06-17','TFE']];
-  return {id:'concertos',n:'Actividades artísticas',c:'#1C7ED6',pub:false,ev:D.map((x,i)=>mkEv({id:'conc'+(i+1),t:'Concerto · '+x[1],d1:x[0],h1:'20:00',esp:L})).concat(concBAEvs(),concUDCEvs(),[concBenEv(),masterEv()],concNovEvs(),[xornEv()],concJunEvs(),concPlanEvs(),[concOctEv(),congEv(),congConcEv()],frJazzEvs(),propinasEvs(),[tfeDir2Ev()],cifpEvs())};
+  return {id:'concertos',n:'Actividades artísticas',c:'#1C7ED6',pub:false,ev:D.map((x,i)=>mkEv({id:'conc'+(i+1),t:'Concerto · '+x[1],d1:x[0],h1:'20:00',esp:L})).concat(concBAEvs(),concUDCEvs(),[concBenEv(),masterEv()],concNovEvs(),[xornEv()],concJunEvs(),concPlanEvs(),[concOctEv(),congEv(),congConcEv()],frJazzEvs(),propinasEvs(),[],cifpEvs())};
 }
 function tfeCal(){return {id:'tfe',n:'TFE',c:'#8A5A2B',pub:false,ev:tfeEvents()}}
 function tfeTab(){
@@ -1009,7 +1009,6 @@ function normState(){
   }
   if(!S.tfeDir2){
     const cc=S.cals.find(c=>c.id==='concertos');
-    if(cc&&!cc.ev.some(e=>e.id==='tfedir2'))cc.ev.push(tfeDir2Ev());
     S.tfeDir2=true;
   }
   if(!S.cifp){
@@ -1036,6 +1035,16 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cc.ev.forEach(e=>{if(e.id==='fls1'||e.id==='fls2')e.h1='19:00';if(e.id==='afund1'||e.id==='afund2')e.h1='19:30'});
     S.novHora=true;
+  }
+  if(!S.tfeDir2Del){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev=cc.ev.filter(e=>e.id!=='tfedir2');
+    S.tfeDir2Del=true;
+  }
+  if(!S.concDirDel){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev=cc.ev.filter(e=>e.id!=='concdir');
+    S.concDirDel=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

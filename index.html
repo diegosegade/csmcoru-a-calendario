@@ -763,9 +763,12 @@ function novEvs(){
   return [
    mkEv({id:'fls1',t:'Concerto · Fundación Luís Seoane',d1:'2027-04-20',h1:'19:00',esp:FLS,ent:'Fundación Luís Seoane'}),
    mkEv({id:'fls2',t:'Concerto · Fundación Luís Seoane',d1:'2027-04-27',h1:'19:00',esp:FLS,ent:'Fundación Luís Seoane'}),
-   mkEv({id:'afund1',t:'Concerto · Cultura por alimentos',d1:'2027-02-22',h1:'19:30',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
-   mkEv({id:'afund2',t:'Concerto · Cultura por alimentos',d1:'2027-02-23',h1:'19:30',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
+   mkEv({id:'afund1',t:'Concerto · Cultura por alimentos',d1:'2027-02-22',h1:'20:00',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
+   mkEv({id:'afund2',t:'Concerto · Cultura por alimentos',d1:'2027-02-23',h1:'20:00',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
    mkEv({id:'chuf50',t:'50 Aniversario do CHUF · colaboración do conservatorio',d1:'2026-12-03',h1:'17:00',esp:'Salón de Actos do Hospital Arquitecto Marcide (Ferrol)',ent:'CHUF · Complexo Hospitalario Universitario de Ferrol'})];
+}
+function capEvs(){
+  return [mkEv({id:'capit1',t:'Concerto · Palacio de Capitanía',d1:'2027-04-15',h1:'19:00',esp:'Palacio de Capitanía (A Coruña)',ent:'Palacio de Capitanía'})];
 }
 function xornEv(){return mkEv({id:'xorndem',t:'Xornadas «Democratización do Coñecemento»',d1:'2026-12-02',h1:'12:00',esp:'Paraninfo da Reitoría'})}
 function concJunEvs(){
@@ -1045,6 +1048,16 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cc.ev=cc.ev.filter(e=>e.id!=='concdir');
     S.concDirDel=true;
+  }
+  if(!S.capitania){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)capEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
+    S.capitania=true;
+  }
+  if(!S.afundH20){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='afund1'||e.id==='afund2')e.h1='20:00'});
+    S.afundH20=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

@@ -738,8 +738,8 @@ function tfeEvents(){
 }
 function concBAEvs(){
   const L='Museo Belas Artes';
-  return [['2027-02-17','Concerto · Gañadores do concurso de cámara','conf'],['2027-02-24','Concerto · Por concretar','sol'],['2027-03-03','Concerto · Por concretar','sol'],['2027-03-10','Concerto · Por concretar','sol']]
-   .map((x,i)=>mkEv({id:'concba'+(i+1),t:x[1],d1:x[0],esp:L,est:x[2]}));
+  return [['2027-02-17','Concerto · Dep. de Piano + Dep. de Guitarra + Dep. de Canto'],['2027-02-24','Concerto · 2º premio do concurso de cámara (Trío Acrunia, medio programa) + Dep. de Corda + Dep. de Acordeón'],['2027-03-03','Concerto · Dep. de Vento metal + Dep. de Vento madeira'],['2027-03-10','Concerto · Gañadores do concurso de cámara (Cuarteto Alisio, programa completo)']]
+   .map((x,i)=>mkEv({id:'concba'+(i+1),t:x[1],d1:x[0],h1:'18:00',esp:L,est:'conf'}));
 }
 function concUDCEvs(){
   const N='NORMAL · Espazo de intervención cultural (UDC)',Rt='Reitorado da UDC';
@@ -1058,6 +1058,11 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cc.ev.forEach(e=>{if(e.id==='afund1'||e.id==='afund2')e.h1='20:00'});
     S.afundH20=true;
+  }
+  if(!S.baRep){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc){const ne=concBAEvs();cc.ev=cc.ev.filter(e=>!/^concba\d$/.test(e.id)).concat(ne);}
+    S.baRep=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

@@ -778,7 +778,7 @@ const CONG_NOTA='O alumnado do conservatorio toca no marco do III Congreso Inter
 function congConcEv(){return mkEv({id:'congconc',t:'Concerto do alumnado · III Congreso Internacional de Psicoloxía da Música',d1:'2026-11-20',h1:'20:00',ent:'AEPMIM',nota:CONG_NOTA})}
 function masterEv(){return mkEv({id:'masterMM',t:'Masterclass de Mariano Martos · baixo eléctrico',d1:'2026-11-04',h1:'11:00',h2:'14:00'})}
 function concNovEvs(){return [
-  mkEv({id:'concsol',t:'Concerto dos gañadores do concurso de solistas con orquestra e banda sinfónica',d1:'2026-11-25',h1:'20:00',esp:'Igrexa de San Xurxo (A Coruña)',nota:'Concerto dos gañadores do concurso de solistas coa Orquestra e a Banda Sinfónica do Conservatorio Superior de Música da Coruña. Trasládase á Igrexa de San Xurxo porque non se cede o Palacio da Ópera.'}),
+  mkEv({id:'concsol',t:'Concerto dos gañadores do concurso de solistas coa Orquestra Sinfónica',d1:'2026-11-25',h1:'20:00',esp:'Igrexa de San Jorge (A Coruña)',nota:'Concerto dos gañadores do concurso de solistas coa Orquestra Sinfónica do Conservatorio Superior de Música da Coruña. O concerto celébrase na Igrexa de San Jorge porque, por motivos de organización do Palacio da Ópera alleos ao conservatorio, non foi posible dispor do espazo.'}),
   mkEv({id:'concdir',t:'Concerto TFE de Dirección',d1:'2026-11-16',esp:'Auditorio Andrés Gaos'})]}
 function cfrEvs(){
   const E='CFR da Coruña',L='Auditorio do CSM da Coruña';
@@ -1149,6 +1149,11 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cc.ev.forEach(e=>{if(e.id==='concsol'){e.esp='Igrexa de San Xurxo (A Coruña)';e.nota='Concerto dos gañadores do concurso de solistas coa Orquestra e a Banda Sinfónica do Conservatorio Superior de Música da Coruña. Trasládase á Igrexa de San Xurxo porque non se cede o Palacio da Ópera.'}});
     S.sanXurxo=true;
+  }
+  if(!S.sanJorge){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='concsol'){e.t='Concerto dos gañadores do concurso de solistas coa Orquestra Sinfónica';e.esp='Igrexa de San Jorge (A Coruña)';e.nota='Concerto dos gañadores do concurso de solistas coa Orquestra Sinfónica do Conservatorio Superior de Música da Coruña. O concerto celébrase na Igrexa de San Jorge porque, por motivos de organización do Palacio da Ópera alleos ao conservatorio, non foi posible dispor do espazo.'}});
+    S.sanJorge=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

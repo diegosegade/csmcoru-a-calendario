@@ -1,3 +1,4 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="gl">
 <head>
@@ -736,6 +737,30 @@ function tfeAdEvs(){return [
 function tfeEvents(){
   return [tfePropEv(),tfeResEv()].concat(tfeRefEvs(),tfeAdEvs(),tfeGroups('').map((x,i)=>mkEv({id:'tfe'+(i+1),t:'TFE · '+x.ks+(x.ped?' (Pedagoxía)':''),d1:x.a,d2:x.b>x.a?x.b:'',esp:x.ped?'Pedagoxía':'',nota:'Alumnado: '+x.w.join('; ')+'. Fonte: táboa de prazos do TFE do centro (curso 2026-27). Información orientativa.'})));
 }
+const FORM_CASINO='https://forms.gle/z9bnUbtGa7C8zfzZA',FORM_MUBA='https://forms.gle/8oQ9czXEbHXnKpnu7',FORM_PLAN='https://forms.gle/eatPkWBCqwUxNqg86',FORM_NORMAL='https://forms.gle/8dCoyb6gzYi3YNfXA',FORM_REIT='https://forms.gle/kdbVha95PwFZYKqt7',FORM_FLS='https://forms.gle/DEXFGpMdaQjq1PA56';
+function innovartEvs(){
+  const L='Cidade da Cultura de Galicia (Santiago de Compostela) · pendente de confirmar',E='Consellería de Educación, Ciencia, Universidades e FP (Xunta de Galicia)';
+  const N=' InnovArt é a mostra das ensinanzas artísticas, deportivas e de idiomas organizada pola Xunta de Galicia. Horario: pola mañá (hora por concretar). O lugar e os horarios de 2027 están pendentes de confirmar. Máis información: https://www.edu.xunta.gal/fp/innovart';
+  return [
+   ['innovart27a','InnovArt · Obradoiro 1: «Descifrando unha banda sonora: elementos rítmicos, melódicos e tímbricos»','2027-02-18','Obradoiro do CSM da Coruña.'],
+   ['innovart27b','InnovArt · Actividade expositiva: actuación do combo de jazz do CSM da Coruña','2027-02-18','Actuación do combo de jazz do CSM da Coruña (Departamento de Jazz).'],
+   ['innovart27c','InnovArt · Obradoiro 2: «Ritmos e coordinación corporal a través de danzas do mundo»','2027-02-19','Obradoiro do CSM da Coruña.'],
+   ['innovart27d','InnovArt · Obradoiro 3: «Produción musical e IA»','2027-02-19','Obradoiro do CSM da Coruña.']
+  ].map(x=>mkEv({id:x[0],t:x[1],d1:x[2],esp:L,ent:E,nota:x[3]+N}));
+}
+function innovartEv(){return mkEv({id:'innovart27',t:'InnovArt · Dep. de Jazz (combos) + Dep. de Pedagoxía',d1:'2027-02-11',d2:'2027-02-12',esp:'Cidade da Cultura de Galicia (Santiago de Compostela) · pendente de confirmar',ent:'Consellería de Educación, Ciencia, Universidades e FP (Xunta de Galicia)',nota:'Participación do conservatorio en InnovArt, mostra das ensinanzas artísticas, deportivas e de idiomas organizada pola Xunta de Galicia. Participan os combos do Departamento de Jazz e o Departamento de Pedagoxía. A edición de 2026 celebrouse no Museo Centro Gaías da Cidade da Cultura; o lugar e os horarios de 2027 están pendentes de confirmar. Máis información: https://www.edu.xunta.gal/fp/innovart'})}
+function concFormNota(e){
+  let u='';
+  if(/^conc\d+$/.test(e.id)&&/Casino/.test(e.esp||'')&&!/TFE/.test(e.t||''))u=FORM_CASINO;
+  else if(['concba1','concba2','concba3'].includes(e.id))u=FORM_MUBA;
+  else if(/^concplan\d+$/.test(e.id))u=FORM_PLAN;
+  else if(/^fls\d+$/.test(e.id))u=FORM_FLS;
+  else if(/^concudc\d+$/.test(e.id))u=/Reitorado/.test(e.esp||'')?FORM_REIT:FORM_NORMAL;
+  if(!u||!e.d1)return '';
+  const M=['xaneiro','febreiro','marzo','abril','maio','xuño','xullo','agosto','setembro','outubro','novembro','decembro'];
+  const d=new Date(e.d1+'T12:00:00');d.setDate(d.getDate()-10);
+  return 'Solicitude de participación: o alumnado propón a súa intervención ao docente, e o docente responsable valida a proposta e formaliza a solicitude no formulario '+u+' como mínimo dez días antes do concerto (prazo: ata o '+d.getDate()+' de '+M[d.getMonth()]+').';
+}
 function concBAEvs(){
   const L='Museo Belas Artes';
   return [['2027-02-17','Concerto · Dep. de Piano + Dep. de Guitarra + Dep. de Canto'],['2027-02-24','Concerto · 2º premio do concurso de cámara (Trío Acrunia, medio programa) + Dep. de Corda + Dep. de Acordeón'],['2027-03-03','Concerto · Dep. de Vento metal + Dep. de Vento madeira'],['2027-03-10','Concerto · Gañadores do concurso de cámara (Cuarteto Alisio, programa completo)']]
@@ -746,12 +771,14 @@ function concUDCEvs(){
   const D=[['2026-12-01','NORMAL (UDC)',N],['2026-12-15','NORMAL (UDC)',N],['2027-04-26','Reitorado (UDC)',Rt],['2027-04-27','NORMAL (UDC)',N],['2027-05-03','Reitorado (UDC)',Rt],['2027-05-04','NORMAL (UDC)',N],['2027-05-10','Reitorado (UDC)',Rt],['2027-05-11','NORMAL (UDC)',N]];
   return D.map((x,i)=>mkEv({id:'concudc'+(i+1),t:'Concerto · '+x[1],d1:x[0],esp:x[2],ent:'Universidade da Coruña (UDC)',nota:x[2]===N?'En colaboración coa UDC. Espazo NORMAL: https://normal.udc.es/es/index/':'En colaboración coa UDC.'}));
 }
-function concBenEv(){return mkEv({id:'concben1',t:'Concerto benéfico · Cociña Económica da Coruña',d1:'2026-12-10',esp:'Teatro Colón',ent:'Cociña Económica da Coruña',nota:'Concerto benéfico a cargo de agrupacións do conservatorio a favor da Cociña Económica da Coruña. Horario por determinar.'})}
+const BEN_NOTA='Concerto benéfico a favor da Cociña Económica da Coruña, coa participación da Brass Band e da Orquestra Sinfónica do CSM da Coruña.';
+function concBenEv(){return mkEv({id:'concben1',t:'Concerto benéfico · Cociña Económica da Coruña',d1:'2026-12-10',esp:'Teatro Colón',ent:'Cociña Económica da Coruña',nota:BEN_NOTA})}
 function congEv(){return mkEv({id:'congpsi',t:'III Congreso Internacional de Psicoloxía da Música',d1:'2026-11-20',d2:'2026-11-22',esp:'Conservatorio Superior de Música da Coruña',ent:'AEPMIM',nota:'O conservatorio acolle o III Congreso Internacional de Psicoloxía da Música, organizado pola AEPMIM. O alumnado do conservatorio toca o día 20 ás 20:00.'})}
-function congConcEv(){return mkEv({id:'congconc',t:'Concerto do alumnado · III Congreso Internacional de Psicoloxía da Música',d1:'2026-11-20',h1:'20:00',ent:'AEPMIM',nota:'O alumnado do conservatorio toca no marco do III Congreso Internacional de Psicoloxía da Música.'})}
+const CONG_NOTA='O alumnado do conservatorio toca no marco do III Congreso Internacional de Psicoloxía da Música. Duración total: 32 minutos aproximadamente. Programa: LUCAS SÁNCHEZ PAZO, piano: J. Brahms, Pezas op. 117, nº 1 e nº 3. MATEO REY EDREIRA, piano: L. v. Beethoven, Sonata op. 28, nº 15 (Allegro, Andante); F. Liszt, Lenda en Lá maior: San Francisco de Asís predicando aos paxaros.';
+function congConcEv(){return mkEv({id:'congconc',t:'Concerto do alumnado · III Congreso Internacional de Psicoloxía da Música',d1:'2026-11-20',h1:'20:00',ent:'AEPMIM',nota:CONG_NOTA})}
 function masterEv(){return mkEv({id:'masterMM',t:'Masterclass de Mariano Martos · baixo eléctrico',d1:'2026-11-04',h1:'11:00',h2:'14:00'})}
 function concNovEvs(){return [
-  mkEv({id:'concsol',t:'Concerto dos gañadores do concurso de solistas con orquestra e banda sinfónica',d1:'2026-11-25',h1:'20:00',esp:'Palacio da Ópera da Coruña',nota:'Concerto dos gañadores do concurso de solistas coa Orquestra e a Banda Sinfónica do Conservatorio Superior de Música da Coruña.'}),
+  mkEv({id:'concsol',t:'Concerto dos gañadores do concurso de solistas con orquestra e banda sinfónica',d1:'2026-11-25',h1:'20:00',esp:'Igrexa de San Xurxo (A Coruña)',nota:'Concerto dos gañadores do concurso de solistas coa Orquestra e a Banda Sinfónica do Conservatorio Superior de Música da Coruña. Trasládase á Igrexa de San Xurxo porque non se cede o Palacio da Ópera.'}),
   mkEv({id:'concdir',t:'Concerto TFE de Dirección',d1:'2026-11-16',esp:'Auditorio Andrés Gaos'})]}
 function cfrEvs(){
   const E='CFR da Coruña',L='Auditorio do CSM da Coruña';
@@ -767,8 +794,17 @@ function novEvs(){
    mkEv({id:'afund2',t:'Concerto · Cultura por alimentos',d1:'2027-02-23',h1:'20:00',esp:'Afundación (A Coruña)',ent:AF,nota:'Programa Cultura por alimentos: iniciativa de Afundación (Obra Social ABANCA) en colaboración coa Federación Española de Bancos de Alimentos (FESBAL). Acceso a cambio de alimentos non perecedoiros ou produtos de primeira necesidade.'}),
    mkEv({id:'chuf50',t:'50 Aniversario do CHUF · colaboración do conservatorio',d1:'2026-12-03',h1:'17:00',esp:'Salón de Actos do Hospital Arquitecto Marcide (Ferrol)',ent:'CHUF · Complexo Hospitalario Universitario de Ferrol'})];
 }
+function tfeBandaEv(){
+  return mkEv({id:'tfebanda',t:'TFE de Dirección de banda · Félix Rodríguez Ramos',d1:'2026-12-16',h1:'19:30',esp:'Auditorio Andrés Gaos',ent:'CSM da Coruña'});
+}
+function muncytEvs(){
+  const L='MUNCYT · Museo Nacional de Ciencia e Tecnoloxía (A Coruña)';
+  const N='Proposta de grupos de cámara e colaboración do Departamento de Composición arredor da exposición «Os instrumentos de Humboldt». Estrutura: cada concerto ten dúas partes. Na primeira, os grupos de cámara xa establecidos presentan o seu repertorio, vinculado ás efemérides do curso (90 anos do nacemento de Philip Glass, 90 anos da morte de Ravel, 90 anos de Steve Reich e 200 anos da morte de Beethoven), cunha explicación didáctica que o relaciona co espazo. Na segunda, o Departamento de Composición completa o programa con obras de nova creación do seu alumnado, inspiradas en pezas do museo ou na exposición sobre Humboldt. Ao rematar a actividade do Museo de Belas Artes. O espazo non dispón de piano. A asignación das obras aos espazos realízaa o Departamento de Composición. Máis información: https://muncyt.es/exposiciones/los-instrumentos-de-humboldt-herramientas-para-concebir-una-nueva-vision-de-la';
+  return [['muncyt1','2027-04-06'],['muncyt2','2027-04-13']].map(x=>mkEv({id:x[0],t:'Concerto · MUNCYT · Grupos de cámara e composición',d1:x[1],h1:'17:00',esp:L,ent:'MUNCYT',est:'conf',nota:N}));
+}
+const CAP_NOTA='O espazo non dispón de piano. Reservarase para formacións de cámara de gran tamaño ou ensembles do centro.';
 function capEvs(){
-  return [mkEv({id:'capit1',t:'Concerto · Palacio de Capitanía',d1:'2027-04-15',h1:'19:00',esp:'Palacio de Capitanía (A Coruña)',ent:'Palacio de Capitanía'})];
+  return [mkEv({id:'capit1',t:'Concerto · Palacio de Capitanía',d1:'2027-04-15',h1:'19:00',esp:'Palacio de Capitanía (A Coruña)',ent:'Palacio de Capitanía',nota:CAP_NOTA})];
 }
 function xornEv(){return mkEv({id:'xorndem',t:'Xornadas «Democratización do Coñecemento»',d1:'2026-12-02',h1:'12:00',esp:'Paraninfo da Reitoría'})}
 function concJunEvs(){
@@ -1064,6 +1100,56 @@ function normState(){
     if(cc){const ne=concBAEvs();cc.ev=cc.ev.filter(e=>!/^concba\d$/.test(e.id)).concat(ne);}
     S.baRep=true;
   }
+  if(!S.tfeBanda){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc&&!cc.ev.some(e=>e.id==='tfebanda'))cc.ev.push(tfeBandaEv());
+    S.tfeBanda=true;
+  }
+  if(!S.muncyt){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)muncytEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});
+    S.muncyt=true;
+  }
+  if(!S.muncyt2){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc){const ne=muncytEvs();cc.ev.forEach(e=>{const n=ne.find(x=>x.id===e.id);if(n)e.nota=n.nota});}
+    S.muncyt2=true;
+  }
+  if(!S.capNota){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='capit1')e.nota=CAP_NOTA});
+    S.capNota=true;
+  }
+  if(!S.benNota){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='concben1')e.nota=BEN_NOTA});
+    S.benNota=true;
+  }
+  if(!S.congNota){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='congconc')e.nota=CONG_NOTA});
+    S.congNota=true;
+  }
+  if(!S.muncyt3){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc){const ne=muncytEvs();cc.ev.forEach(e=>{const n=ne.find(x=>x.id===e.id);if(n){e.nota=n.nota;e.est='conf';e.h1='17:00'}});}
+    S.muncyt3=true;
+  }
+  if(!S.muncyt4){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc){const ne=muncytEvs();cc.ev.forEach(e=>{const n=ne.find(x=>x.id===e.id);if(n)e.nota=n.nota});}
+    S.muncyt4=true;
+  }
+  if(!S.muncyt5){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc){const ne=muncytEvs();cc.ev.forEach(e=>{const n=ne.find(x=>x.id===e.id);if(n)e.nota=n.nota});}
+    S.muncyt5=true;
+  }
+  if(!S.sanXurxo){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(e.id==='concsol'){e.esp='Igrexa de San Xurxo (A Coruña)';e.nota='Concerto dos gañadores do concurso de solistas coa Orquestra e a Banda Sinfónica do Conservatorio Superior de Música da Coruña. Trasládase á Igrexa de San Xurxo porque non se cede o Palacio da Ópera.'}});
+    S.sanXurxo=true;
+  }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');
     if(ce){ce.pub=true;if(!ce.ev.some(e=>e.id==='erasmusdoc'))ce.ev.push(erasmusDocEv())}
@@ -1120,6 +1206,36 @@ function normState(){
     const D={o1t:['2027-01-18','2027-01-22'],o1i:['2027-01-25','2027-01-29'],o2t:['2027-05-17','2027-05-21'],o2i:['2027-05-24','2027-05-28']};
     Object.keys(D).forEach(k=>{if(!S.acts[k]||!S.acts[k].a)S.acts[k]={a:D[k][0],b:D[k][1]}});
     S.exOrdSeed=true;
+  }
+  if(!S.sinerxias5){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc&&!cc.ev.some(e=>e.id==='sinerxias5'))cc.ev.push(mkEv({id:'sinerxias5',t:'Proxecto educativo Sinerxias V · Big Band do CSM da Coruña',d1:'2027-06-07',d2:'2027-06-08',esp:'Teatro Colón',nota:'Participación da Big Band do conservatorio no proxecto educativo Sinerxias V. Horario por determinar.'}));
+    S.sinerxias5=true;
+  }
+  if(!S.innovart){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc&&!cc.ev.some(e=>e.id==='innovart27'))cc.ev.push(innovartEv());
+    S.innovart=true;
+  }
+  if(!S.innovart2){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc){cc.ev=cc.ev.filter(e=>e.id!=='innovart27');innovartEvs().forEach(ev=>{if(!cc.ev.some(e=>e.id===ev.id))cc.ev.push(ev)});}
+    S.innovart2=true;
+  }
+  if(!S.concForms3){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{const n=concFormNota(e);if(n&&!/forms\.gle/.test(e.nota||''))e.nota=(/^conc(\d+|ba\d)$/.test(e.id)||!e.nota?'':e.nota+' ')+n});
+    S.concForms=true;S.concForms2=true;S.concForms3=true;
+  }
+  if(!S.normalPiano){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(/^concudc\d+$/.test(e.id)&&/NORMAL/.test(e.esp||'')&&!/piano/i.test(e.nota||'')){const P='O espazo non dispón de piano.';e.nota=/En colaboración coa UDC\./.test(e.nota||'')?e.nota.replace('En colaboración coa UDC.','En colaboración coa UDC. '+P):((e.nota?e.nota+' ':'')+P)}});
+    S.normalPiano=true;
+  }
+  if(!S.flsPiano){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc)cc.ev.forEach(e=>{if(/^fls\d+$/.test(e.id)&&!/piano/i.test(e.nota||''))e.nota='O espazo non dispón de piano.'+(e.nota?' '+e.nota:'')});
+    S.flsPiano=true;
   }
   S.eleccion=S.eleccion===true;S.porSemana=S.porSemana===true;
   if(!Array.isArray(S.blocks))S.blocks=[];
@@ -2027,7 +2143,7 @@ function evCard(it,admin,showCal){
   if(ev.ent)tags+='<span class="tag">'+esc(ev.ent)+'</span>';
   if(admin&&ev.priv)tags+='<span class="tag">Oculto ao profesorado</span>';
   let more='';
-  if(ev.nota)more+='<div class="small" style="margin-top:.3rem">'+esc(ev.nota)+'</div>';
+  if(ev.nota)more+='<div class="small" style="margin-top:.3rem">'+esc(ev.nota).replace(/https?:\/\/[^\s<]*[^\s<.,;)]/g,u=>'<a href="'+u+'" target="_blank" rel="noopener">'+u+'</a>')+'</div>';
   if(admin&&ev.cont)more+='<div class="small muted">Contacto: '+esc(ev.cont)+'</div>';
   if(admin&&ev.int)more+='<div class="small muted">Interno: '+esc(ev.int)+'</div>';
   let warn='';
@@ -2652,3 +2768,5 @@ else{
 </script>
 </body>
 </html>
+
+</body></html>

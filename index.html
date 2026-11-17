@@ -806,6 +806,7 @@ const CAP_NOTA='O espazo non dispón de piano. Reservarase para formacións de c
 function capEvs(){
   return [mkEv({id:'capit1',t:'Concerto · Palacio de Capitanía',d1:'2027-04-15',h1:'19:00',esp:'Palacio de Capitanía (A Coruña)',ent:'Palacio de Capitanía',nota:CAP_NOTA})];
 }
+function maristasEv(){return mkEv({id:'maristas',t:'Concerto-visita ao conservatorio · Alumnado do Colexio Maristas',d1:'2026-11-18',h1:'10:30',h2:'12:00',esp:'Auditorio Andrés Gaos',ent:'CSM da Coruña',nota:'Concerto con motivo da visita ao conservatorio do alumnado do Colexio Maristas. Celébrase en galego.'})}
 function xornEv(){return mkEv({id:'xorndem',t:'Xornadas «Democratización do Coñecemento»',d1:'2026-12-02',h1:'12:00',esp:'Paraninfo da Reitoría'})}
 function concJunEvs(){
   const L='Teatro Colón',B='Sinerxias V · Big Band do CSM da Coruña';
@@ -1154,6 +1155,11 @@ function normState(){
     const cc=S.cals.find(c=>c.id==='concertos');
     if(cc)cc.ev.forEach(e=>{if(e.id==='concsol'){e.t='Concerto dos gañadores do concurso de solistas coa Orquestra Sinfónica';e.esp='Igrexa de San Jorge (A Coruña)';e.nota='Concerto dos gañadores do concurso de solistas coa Orquestra Sinfónica do Conservatorio Superior de Música da Coruña. O concerto celébrase na Igrexa de San Jorge porque, por motivos de organización do Palacio da Ópera alleos ao conservatorio, non foi posible dispor do espazo.'}});
     S.sanJorge=true;
+  }
+  if(!S.maristas){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc&&!cc.ev.some(e=>e.id==='maristas'))cc.ev.push(maristasEv());
+    S.maristas=true;
   }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');

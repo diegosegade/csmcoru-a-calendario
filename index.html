@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <!DOCTYPE html>
 <html lang="gl">
 <head>
@@ -23,20 +22,17 @@
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --paper:#000000; --card:#0F1013; --ink:#F2F2F0; --muted:#9A9DA6; --line:#2A2C33; --we:#07080A; --c-se:#F2F2F0;
+    --paper:#0E1524; --card:#1A2438; --ink:#F0F4FA; --muted:#A3AFC4; --line:#33415C; --we:#0A101C;
     --fest:#D32F2F; --local:#C25E00; --local2:#E07A10; --vac:#00897B; --ens:#1E88E5; --cen:#8E24AA; --ext:#607D8B;
     --e1:#5AA2FF; --e2:#4FD18B; --e3:#FF7BAA; --e4:#E5C15D;
     --o1:#E060D0; --o2:#4FB3F0; --o3:#F0A830; --o4:#5FD068; --o5:#D98A62; --o6:#4DD0BF; --o7:#A58BFF; --o8:#90A4AE;
   }
 }
 :root[data-theme="dark"]{
-  --paper:#000000; --card:#0F1013; --ink:#F2F2F0; --muted:#9A9DA6; --line:#2A2C33; --we:#07080A; --c-se:#F2F2F0;
+  --paper:#0E1524; --card:#1A2438; --ink:#F0F4FA; --muted:#A3AFC4; --line:#33415C; --we:#0A101C;
   --fest:#D32F2F; --local:#C25E00; --local2:#E07A10; --vac:#00897B; --ens:#1E88E5; --cen:#8E24AA; --ext:#607D8B;
   --e1:#5AA2FF; --e2:#4FD18B; --e3:#FF7BAA; --e4:#E5C15D;
   --o1:#E060D0; --o2:#4FB3F0; --o3:#F0A830; --o4:#5FD068; --o5:#D98A62; --o6:#4DD0BF; --o7:#A58BFF; --o8:#90A4AE;
-}
-@media print{
-  :root[data-theme="dark"]{--paper:#EEF1F5;--card:#FFFFFF;--ink:#111B2E;--muted:#56637A;--line:#CBD3DF;--we:#DCE1E9;--c-se:#0B0B0B;--fest:#C62828;--local:#B85400;--local2:#D96A00;--vac:#00796B;--ens:#1565C0;--cen:#6A1B9A;--ext:#455A64;--e1:#1E6FD9;--e2:#1F9D55;--e3:#D6336C;--e4:#A67C00;--o1:#B5179E;--o2:#0077B6;--o3:#C77700;--o4:#2E7D32;--o5:#A0522D;--o6:#00897B;--o7:#5E35B1;--o8:#546E7A}
 }
 *,*::before,*::after{box-sizing:inherit}
 html{scroll-padding-top:env(safe-area-inset-top,0px);font-size:16px;-webkit-text-size-adjust:100%}
@@ -601,7 +597,7 @@ function okConfirm(m){
 const Q=new URLSearchParams(location.search);
 const CFG=(window.CALENDARIO_CONFIG&&window.CALENDARIO_CONFIG.url&&window.CALENDARIO_CONFIG.key&&!/TU-PROYECTO/i.test(window.CALENDARIO_CONFIG.url))?window.CALENDARIO_CONFIG:null;
 /* Coa versión de servidor, a dirección simple é de SÓ LECTURA; a administración está en ?admin=1 */
-const MODE='ver'; /* copia de consulta: sempre só lectura */
+const MODE=Q.get('votar')?'voto':(Q.get('admin')?'admin':((Q.get('ver')||CFG)?'ver':'admin'));
 const RO=MODE!=='admin';
 
 const WD=['Luns','Martes','Mércores','Xoves','Venres'];
@@ -807,6 +803,7 @@ function capEvs(){
   return [mkEv({id:'capit1',t:'Concerto · Palacio de Capitanía',d1:'2027-04-15',h1:'19:00',esp:'Palacio de Capitanía (A Coruña)',ent:'Palacio de Capitanía',nota:CAP_NOTA})];
 }
 function maristasEv(){return mkEv({id:'maristas',t:'Concerto-visita ao conservatorio · Alumnado do Colexio Maristas',d1:'2026-11-18',h1:'10:30',h2:'12:00',esp:'Auditorio Andrés Gaos',ent:'CSM da Coruña',nota:'Concerto con motivo da visita ao conservatorio do alumnado do Colexio Maristas. Celébrase en galego.'})}
+function cuartetoEv(){return mkEv({id:'cuartetogal',t:'Conferencia · O cuarteto de corda en Galicia: tradición, identidade e experimentación',d1:'2026-11-26',h1:'12:00',esp:'Biblioteca do CSM da Coruña',ent:'CSM da Coruña',nota:'Conferencia de Mª del Carmen Lorenzo Vizcaíno, musicóloga e profesora na UNIR. Un encontro para achegármonos á historia e á evolución do cuarteto de corda en Galicia, explorando a súa relación coa tradición musical, a identidade cultural e as novas vías de experimentación.'})}
 function xornEv(){return mkEv({id:'xorndem',t:'Xornadas «Democratización do Coñecemento»',d1:'2026-12-02',h1:'12:00',esp:'Paraninfo da Reitoría'})}
 function concJunEvs(){
   const L='Teatro Colón',B='Sinerxias V · Big Band do CSM da Coruña';
@@ -1161,6 +1158,11 @@ function normState(){
     if(cc&&!cc.ev.some(e=>e.id==='maristas'))cc.ev.push(maristasEv());
     S.maristas=true;
   }
+  if(!S.cuartetoGal){
+    const cc=S.cals.find(c=>c.id==='concertos');
+    if(cc&&!cc.ev.some(e=>e.id==='cuartetogal'))cc.ev.push(cuartetoEv());
+    S.cuartetoGal=true;
+  }
   if(!S.erasmusDoc){
     const ce=S.cals.find(c=>c.id==='erasmus');
     if(ce){ce.pub=true;if(!ce.ev.some(e=>e.id==='erasmusdoc'))ce.ev.push(erasmusDocEv())}
@@ -1255,7 +1257,6 @@ function normState(){
   sortProps();
 }
 normState();
-S.cals.forEach(c=>{c.pub=true});S.theme='dark';
 let synced=false,pushT=null;
 function save(){if(RO)return;try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}if(CFG&&synced){clearTimeout(pushT);pushT=setTimeout(pushDraft,1200)}try{updatePubBtn()}catch(e){}}
 
@@ -2760,7 +2761,6 @@ $('adminGo').onclick=async()=>{
 
 /* ================= Arranque ================= */
 if(RO)document.body.classList.add('ro');
-document.body.insertAdjacentHTML('afterbegin','<div class="noprint" style="background:#FFF3BF;color:#3B2F00;border-bottom:2px solid #F59F00;padding:.45rem .8rem;font:600 .9rem system-ui,sans-serif;text-align:center">O día non lectivo elixido polo Consello Escolar está pendente de aprobación por parte da Inspección.</div>');
 if(MODE==='voto'){initVoter()}
 else{
   if(RO){$('hdrP').textContent='Datas do curso 2026-27: días lectivos, festivos, cuadrimestres, exames, convocatorias e prazos.'}
@@ -2779,5 +2779,3 @@ else{
 </script>
 </body>
 </html>
-
-</body></html>
